@@ -40,7 +40,7 @@ class Spot:
     def create_playlist(self, name: str, user_id: str = None, public: bool = False, collaborative: bool = False, description: str = ''):
         if not user_id:
             user_id = self.user_id
-        self.spot.user_playlist_create(
+        return self.spot.user_playlist_create(
             user = user_id,
             name = name,
             public = public, 
@@ -51,20 +51,21 @@ class Spot:
         for artist in artists:
             arts = self.lookup_artist(name = artist, return_type = 'track')
             tracks = [x['uri'] for x in arts['tracks']['items']]
-        self.spot.playlist_add_items(
-            playlist_id=playlist_id,
-            items = tracks
-        )
+            self.spot.playlist_add_items(
+                playlist_id=playlist_id,
+                items = tracks
+            )
     def get_saved_tracks(self):
         results = self.spot.current_user_saved_tracks()
         for idx, item in enumerate(results['items']):
             track = item['track']
             print(idx, track['artists'][0]['name'], " – ", track['name'])
-    def lookup_artist(self, name: str, return_type: str = 'track'):
+    def lookup_artist(self, name: str, return_type: str = 'track', limit: int = 10):
         '''
         return_type - the types of items to return. One or more of 'artist', 'album', 'track', 'playlist', 'show', and 'episode'. If multiple types are desired, pass in a comma separated string; e.g., 'track,album,episode'.
+        limit - max items to return; <= 50
         '''
-        results = self.spot.search(q='artist:' + name, type=return_type)
+        results = self.spot.search(q='artist:' + name, type=return_type, limit = limit)
         return results
 
 

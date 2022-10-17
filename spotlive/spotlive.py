@@ -2,7 +2,6 @@ from spotlive.spotify import Spot
 from spotlive.ticketmaster import Shows
 import json
 from datetime import datetime, timedelta
-import pytz
 from dateutil import parser
 
 class SpotLive:
@@ -48,7 +47,8 @@ class SpotLive:
         playlist = [x for x in self.playlists if x.get('name','') == playlist_name]
         if len(playlist) == 0:
             playlist = self.spot.create_playlist(name = playlist_name, user_id = self.spot.user_id)
-            # ISSUE: this above call does not seem to return a playlist object or id
+            # ISSUE: playlists created with this above call
+                # do not show up when listed for the user.
         else:
             playlist = playlist[0]
         self.spot.add_to_playlist(
