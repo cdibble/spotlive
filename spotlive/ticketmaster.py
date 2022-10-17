@@ -1,8 +1,8 @@
-import os
 import ticketpy
 import json
 from geopy.exc import GeocoderTimedOut
 from geopy.geocoders import Nominatim
+
 
 class Shows:
     def __init__(self, ticketmaster_app_creds: dict):
@@ -19,7 +19,8 @@ class Shows:
             latlong = latlong,
             radius = radius_mi,
             unit = 'miles',
-            keyword = keyword
+            keyword = keyword,
+            size = limit
             )
         locales = []
         while len(locales) < limit:
@@ -27,18 +28,22 @@ class Shows:
             if len(venue_set) == 0:
                 break
             locales.extend(venue_set)
-        return locales
+        return list(set(locales))
     def event_search(self, start_date_time: str, end_date_time: str, classification_name: list = None, zipcode: str = None, latlong: str = None, radius_mi: int = 10, venue_id: str = None, limit = 50):
         # https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+        # start_date_time = start_date_time+'Z' if not start_date_time.endswith('Z') else start_date_time
+        # end_date_time = end_date_time+'Z' if not end_date_time.endswith('Z') else end_date_time
+        print(f"{start_date_time} {end_date_time}")
         events = self.tm_client.events.find(
-            start_date_time=start_date_time,
-            end_date_time=end_date_time,
-            classification_name=classification_name,
+            start_date_time = start_date_time+'Z' if not start_date_time.endswith('Z') else start_date_time,
+            end_date_time = end_date_time+'Z' if not end_date_time.endswith('Z') else end_date_time,
+            classification_name = classification_name,
             postal_code = zipcode,
             # state_code='GA',
             latlong = latlong,
             radius = radius_mi,
-            venue_id = venue_id
+            venue_id = venue_id,
+            size = limit
         )
         all_events = []
         while len(all_events) < limit:
@@ -46,7 +51,7 @@ class Shows:
             if len(venue_set) == 0:
                 break
             all_events.extend(venue_set)
-        return all_events
+        return list(set(all_events))
     def classification_search(self, keyword: str = None, limit = 100):
         # https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
         classifications = self.tm_client.classifications.find(
