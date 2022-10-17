@@ -46,7 +46,11 @@ class SpotLive:
     def append_playlist(self, playlist_name: str, artists: list):
         playlist = [x for x in self.playlists if x.get('name','') == playlist_name]
         if len(playlist) == 0:
-            playlist = self.spot.create_playlist(name = playlist_name, user_id = self.spot.user_id)
+            playlist = self.spot.create_playlist(
+                name = playlist_name,
+                user_id = self.spot.user_id,
+                public=True
+                )
             # ISSUE: playlists created with this above call
                 # do not show up when listed for the user.
         else:
@@ -68,8 +72,9 @@ def main():
     venue_names = [x.name for x in venues]
     events = sl.get_events_by_venue(venues = venues)
     artists = [e.name for e in events]
-    sl.append_playlist(playlist_name='tester_list', artists = artists)
-    for artist in artists:
-        arts = sl.spot.lookup_artist(artist, return_type='artist,track')
-        tracks = [x['uri'] for x in arts['tracks']['items']]
-        [x['uri'] for x in arts['tracks']['items']]
+    artists = ['Minus The Bear']
+    # for artist in artists:
+    #     arts = sl.spot.lookup_artist(artist, return_type='artist,track')
+    #     tracks = [x['uri'] for x in arts['tracks']['items']]
+    #     [x['uri'] for x in arts['tracks']['items']]
+    sl.append_playlist(playlist_name='tester_list2', artists = artists)
