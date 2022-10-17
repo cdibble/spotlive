@@ -20,6 +20,7 @@ class SpotLive:
             microsecond=0
             ).isoformat() # 
         self.end_date = (parser.parse(self.start_date) + timedelta(days=days_forward)).isoformat()
+        self.playlists = self.spot.get_playlists(user = spotify_app_creds['user_id'])
     def get_events_by_venue(
         self,
         venues: list = None,
@@ -43,8 +44,17 @@ class SpotLive:
             except:
                 print(f"failed with: {venue.name}")
         return all_events
-    def get_(self):
-        pass
+    def append_playlist(self, playlist_name: str, artists: list):
+        playlist = [x for x in self.playlists if x.get('name','') == playlist_name]
+        if len(playlist) == 0:
+            playlist = self.spot.create_playlist(name = playlist_name, user_id = self.spot.user_id)
+            # ISSUE: this above call does not seem to return a playlist object or id
+        else:
+            playlist = playlist[0]
+        self.spot.add_to_playlist(
+            playlist_id = playlist['id'],
+            artists = artists
+            )
 
 
 def main():
@@ -52,10 +62,14 @@ def main():
         ticketmaster_app_creds = json.loads(f.read())
     with open('secrets/spotify_app_creds.json') as f:
         spotify_app_creds = json.loads(f.read())
-        
     sl = SpotLive(spotify_app_creds=spotify_app_creds, ticketmaster_app_creds=ticketmaster_app_creds)
     venues = sl.shows.venue_search(city='San Diego', radius_mi = 20, limit = 200)
     venues = sl.shows.venue_search(keyword='Casbah', city = 'San Diego')
     venue_names = [x.name for x in venues]
     events = sl.get_events_by_venue(venues = venues)
     artists = [e.name for e in events]
+    sl.append_playlist(playlist_name='tester_list', artists = artists)
+    for artist in artists:
+        arts = sl.spot.lookup_artist(artist, return_type='artist,track')
+        tracks = [x['uri'] for x in arts['tracks']['items']]
+        [x['uri'] for x in arts['tracks']['items']]
