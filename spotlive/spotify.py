@@ -22,8 +22,10 @@ class Spot:
                 redirect_uri=spotify_app_creds.get('redirect_uri'),
                 scope="user-library-read,playlist-modify-private,playlist-modify-public")
             )
-        self.user_id = user_id if user_id else spotify_app_creds.get('user_id')
-    def get_playlists(self, user: str = 'spotify'):
+        self.user_id = user_id if user_id else spotify_app_creds.get('user_id', 'spotify')
+    def get_playlists(self, user: str = None):
+        if not user:
+            user = self.user_id
         playlists = self.spot.user_playlists(user)
         # playlists = self.spot.current_user_playlists()
         all_playlists=[]

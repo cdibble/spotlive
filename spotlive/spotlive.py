@@ -1,5 +1,5 @@
-from spotlive.spotify import Spot
-from spotlive.ticketmaster import Shows
+from spotLive.spotify import Spot
+from spotLive.ticketmaster import Shows
 import json
 from datetime import datetime, timedelta
 from dateutil import parser
