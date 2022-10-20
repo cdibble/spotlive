@@ -117,7 +117,7 @@ This package includes a CLI program for creating/updating playlists from configs
 
 ### Configs
 
-'''json
+```json
 {
     "playlist_name": "Casbah_1",
     "venues": ["Casbah"],
@@ -126,4 +126,4 @@ This package includes a CLI program for creating/updating playlists from configs
     "artist_exclude": [],
     "days_ahead": null
 }
-'''
+```
