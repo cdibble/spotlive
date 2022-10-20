@@ -10,7 +10,7 @@ class Shows:
     def _city_lookup(self, city: str):
         geolocator = Nominatim(user_agent="your_app_name")
         return geolocator.geocode(city)
-    def venue_search(self, city: str = None, latlong: str = None, radius_mi: int = 10, keyword: str = None, limit = 50):
+    def venue_search(self, city: str = None, latlong: str = None, radius_mi: int = 10, keyword: str = None, limit = 50, **kwargs):
         # https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-venues-v2
         if city:
             city = self._city_lookup(city = city)
@@ -29,11 +29,11 @@ class Shows:
                 break
             locales.extend(venue_set)
         return list(set(locales))
-    def event_search(self, start_date_time: str, end_date_time: str, classification_name: list = None, zipcode: str = None, latlong: str = None, radius_mi: int = 10, venue_id: str = None, limit = 50):
+    def event_search(self, start_date_time: str, end_date_time: str, classification_name: list = None, zipcode: str = None, latlong: str = None, radius_mi: int = None, venue_id: str = None, limit = 50, **kwargs):
         # https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
         # start_date_time = start_date_time+'Z' if not start_date_time.endswith('Z') else start_date_time
         # end_date_time = end_date_time+'Z' if not end_date_time.endswith('Z') else end_date_time
-        print(f"{start_date_time} {end_date_time}")
+        print(f"getting events from: {start_date_time} {end_date_time}")
         events = self.tm_client.events.find(
             start_date_time = start_date_time+'Z' if not start_date_time.endswith('Z') else start_date_time,
             end_date_time = end_date_time+'Z' if not end_date_time.endswith('Z') else end_date_time,

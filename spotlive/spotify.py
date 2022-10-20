@@ -1,6 +1,9 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import json
+import traceback
+import logging 
+module_logger = logging.getLogger(__name__)
 
 class Spot:
     def __init__(self, spotify_app_creds: dict, user_id: str = None):
@@ -48,13 +51,23 @@ class Spot:
             description = description
         )
     def add_to_playlist(self, playlist_id: str = None, artists: list = []):
+        added_tracks = {}
         for artist in artists:
             arts = self.lookup_artist(name = artist, return_type = 'track')
             tracks = [x['uri'] for x in arts['tracks']['items']]
-            self.spot.playlist_add_items(
-                playlist_id=playlist_id,
-                items = tracks
-            )
+            print(f"artist: {artist}")
+            print(f"tracks: {tracks}")
+            if len(tracks) > 0:
+                try:
+                    self.spot.playlist_add_items(
+                        playlist_id = playlist_id,
+                        items = tracks
+                    )
+                except Exception as e:
+                    traceback.format_exc()
+                    pass
+            added_tracks[artist] = tracks
+        return added_tracks
     def get_saved_tracks(self):
         results = self.spot.current_user_saved_tracks()
         for idx, item in enumerate(results['items']):
@@ -65,7 +78,7 @@ class Spot:
         return_type - the types of items to return. One or more of 'artist', 'album', 'track', 'playlist', 'show', and 'episode'. If multiple types are desired, pass in a comma separated string; e.g., 'track,album,episode'.
         limit - max items to return; <= 50
         '''
-        results = self.spot.search(q='artist:' + name, type=return_type, limit = limit)
+        results = self.spot.search(q = 'artist:' + name, type = return_type, limit = limit)
         return results
 
 
