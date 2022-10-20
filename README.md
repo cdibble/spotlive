@@ -1,4 +1,4 @@
-# spotLive
+# SpotLive
 Create Spotify playlists based on upcoming shows at your chosen venues
 
 
@@ -29,6 +29,16 @@ For info on creating Spotify credentials: go [here](https://developer.spotify.co
 
 
 ## Usage
+
+```python
+def run_from_config():
+    with open('secrets/ticketmaster_app_creds.json') as f:
+        ticketmaster_app_creds = json.loads(f.read())
+    with open('secrets/spotify_app_creds.json') as f:
+        spotify_app_creds = json.loads(f.read())
+    sl = SpotLive(spotify_app_creds=spotify_app_creds, ticketmaster_app_creds=ticketmaster_app_creds)
+    sl.update_from_config(config = 'test/test_config.json')
+```
 
 ### Modules
 

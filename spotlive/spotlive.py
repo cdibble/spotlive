@@ -1,5 +1,6 @@
-from spotLive.spotify import Spot
-from spotLive.ticketmaster import Shows
+from operator import mod
+from SpotLive.spotify import Spot
+from SpotLive.ticketmaster import Shows
 import json
 from datetime import datetime, timedelta
 from dateutil import parser
@@ -58,13 +59,13 @@ class SpotLive:
                     venue_id=venue.id,
                 )
             except:
-                print(f"failed with: {venue.name}")
+                module_logger.info(f"failed with: {venue.name}")
                 all_events[venue] = []
         return all_events
     def append_playlist(self, playlist_name: str, artists: list):
         playlist = [x for x in self.playlists if x.get('name','') == playlist_name]
         if len(playlist) == 0:
-            print(f'creating playlist {playlist}')
+            module_logger.info(f'creating playlist {playlist}')
             playlist = self.spot.create_playlist(
                 name = playlist_name,
                 user_id = self.spot.user_id,
@@ -72,7 +73,7 @@ class SpotLive:
                 )
         else:
             playlist = playlist[0]
-        print(f"Proceeding with playlist_id: {playlist['id']}")
+        module_logger.info(f"Proceeding with playlist_id: {playlist['id']}")
         self.spot.add_to_playlist(
             playlist_id = playlist['id'],
             artists = artists
@@ -109,21 +110,21 @@ class SpotLive:
                     )
                 all_venues.extend(city_venues)
             venues = [x for x in all_venues if x not in playlist_config.get('venue_exclude', [])]
-            print(f"Updating playlist using venues: {venues}")
+            module_logger.info(f"Updating playlist using venues: {venues}")
             if playlist_config.get('days_ahead'):
                 self.end_date = (parser.parse(self.start_date) + timedelta(days=int(playlist_config.get('days_ahead')))).isoformat()
             all_events = self.get_events_by_venue(venues = venues)
             artists = []
             for venue, events in all_events.items():
-                artists.append(
+                artists.extend(
                     [e.name for e in events if e.name not in playlist_config.get('artist_exclude', [])]
                 )
-            print(f"Updating playlist using artists: {artists}")
+            module_logger.debug(f"Updating playlist using artists: {artists}")
             self.append_playlist(
                 playlist_name = playlist_name,
                 artists = artists
                 )
-            print(f"Ok. Updated {playlist_name}")
+            module_logger.info(f"Ok. Updated {playlist_name}")
 
 
 
@@ -142,7 +143,7 @@ def main():
     artists = []
     for venue, events in all_events.items():
         artists.extend(
-            [e.name for e in events if e.name not in playlist_config.get('artist_exclude', [])]
+            [e.name for e in events if e.name not in {}.get('artist_exclude', [])]
         )
     artists = [e.name for e in events]
     artists = ['Minus The Bear']
@@ -151,3 +152,4 @@ def main():
     #     tracks = [x['uri'] for x in arts['tracks']['items']]
     #     [x['uri'] for x in arts['tracks']['items']]
     sl.append_playlist(playlist_name='tester_list2', artists = artists)
+

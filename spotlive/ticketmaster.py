@@ -2,7 +2,8 @@ import ticketpy
 import json
 from geopy.exc import GeocoderTimedOut
 from geopy.geocoders import Nominatim
-
+import logging
+module_logger = logging.getLogger(__name__)
 
 class Shows:
     def __init__(self, ticketmaster_app_creds: dict):
@@ -33,7 +34,7 @@ class Shows:
         # https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
         # start_date_time = start_date_time+'Z' if not start_date_time.endswith('Z') else start_date_time
         # end_date_time = end_date_time+'Z' if not end_date_time.endswith('Z') else end_date_time
-        print(f"getting events from: {start_date_time} {end_date_time}")
+        module_logger.debug(f"getting events from: {start_date_time} {end_date_time}")
         events = self.tm_client.events.find(
             start_date_time = start_date_time+'Z' if not start_date_time.endswith('Z') else start_date_time,
             end_date_time = end_date_time+'Z' if not end_date_time.endswith('Z') else end_date_time,

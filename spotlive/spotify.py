@@ -31,7 +31,7 @@ class Spot:
         all_playlists=[]
         while playlists:
             for i, playlist in enumerate(playlists['items']):
-                # print("%4d %s %s" % (i + 1 + playlists['offset'], playlist['uri'],  playlist['name']))
+                # module_logger.info("%4d %s %s" % (i + 1 + playlists['offset'], playlist['uri'],  playlist['name']))
                 all_playlists.append(playlist)
             if playlists['next']:
                 playlists = self.spot.next(playlists)
@@ -55,10 +55,11 @@ class Spot:
     def add_to_playlist(self, playlist_id: str = None, artists: list = []):
         added_tracks = {}
         for artist in artists:
+            module_logger.debug(f'going for artist {artist}')
             arts = self.lookup_artist(name = artist, return_type = 'track')
             tracks = [x['uri'] for x in arts['tracks']['items']]
-            print(f"artist: {artist}")
-            print(f"tracks: {tracks}")
+            module_logger.info(f"artist: {artist}")
+            module_logger.info(f"tracks: {tracks}")
             if len(tracks) > 0:
                 try:
                     self.spot.playlist_add_items(
@@ -74,7 +75,7 @@ class Spot:
         results = self.spot.current_user_saved_tracks()
         for idx, item in enumerate(results['items']):
             track = item['track']
-            print(idx, track['artists'][0]['name'], " – ", track['name'])
+            module_logger.info(idx, track['artists'][0]['name'], " – ", track['name'])
     def lookup_artist(self, name: str, return_type: str = 'track', limit: int = 10):
         '''
         return_type - the types of items to return. One or more of 'artist', 'album', 'track', 'playlist', 'show', and 'episode'. If multiple types are desired, pass in a comma separated string; e.g., 'track,album,episode'.

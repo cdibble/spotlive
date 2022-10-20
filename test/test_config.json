@@ -1,0 +1,18 @@
+[
+    {
+        "playlist_name": "Casbah_Upcoming",
+        "venues": ["Casbah"],
+        "venue_exclude": [],
+        "artist_exclude": [],
+        "days_ahead": 40
+    },
+    {
+        "playlist_name": "SanDiego_Upcoming",
+        "venues": [],
+        "city": ["San Diego"],
+        "venue_exclude": ["Casbah"],
+        "artist_exclude": [],
+        "days_ahead": 10
+    }
+    
+]
