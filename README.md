@@ -57,7 +57,6 @@ for venue, events in all_events.items():
     )
 # append playlist with artists
 sl.append_playlist(playlist_name='tester_list2', artists = artists)
-
 ```
 
 
@@ -114,8 +113,10 @@ for classification_name in classification_names:
 
 
 ### CLI
+This package includes a CLI program for creating/updating playlists from configs or via command line arguments that specify venues or areas of interest.
 
 ### Configs
+
 '''json
 {
     "playlist_name": "Casbah_1",
