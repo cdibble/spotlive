@@ -3,6 +3,8 @@ from spotlive.ticketmaster import Shows
 import json
 from datetime import datetime, timedelta
 from dateutil import parser
+import logging
+module_logger = logging.getLogger(__name__)
 
 class SpotLive:
     def __init__(
@@ -29,6 +31,22 @@ class SpotLive:
         ):
         if not venues:
             venues = self.shows.venue_search(city=city, radius_mi=radius_mi, latlong=latlong)
+        # If venues are passed as strings, perform a lookup to get venue.id
+        for i in range(len(venues)):
+            if isinstance(venues[i], str):
+                venue_i = self.shows.venue_search(
+                    keyword = venues[i],
+                    city=city,
+                    radius_mi=radius_mi,
+                    latlong=latlong
+                    )
+                if len(venue_i) > 1:
+                    module_logger.warning(f"Venue lookup returned more than one possible result. Pass city or latlong/radius_mi to narrow down the results.")
+                    print(venue_i)
+                    venues[i] = venue_i[0]
+                    venues.extend(venue_i[1:])
+                else:
+                    venues[i] = venue_i[0]
         # venues = self.shows.venue_search(latlong='28,-120', radius_mi = 800)
         all_events=[]
         for venue in venues:
@@ -51,8 +69,6 @@ class SpotLive:
                 user_id = self.spot.user_id,
                 public=True
                 )
-            # ISSUE: playlists created with this above call
-                # do not show up when listed for the user.
         else:
             playlist = playlist[0]
         self.spot.add_to_playlist(
@@ -71,6 +87,7 @@ def main():
     venues = sl.shows.venue_search(keyword='Casbah', city = 'San Diego')
     venue_names = [x.name for x in venues]
     events = sl.get_events_by_venue(venues = venues)
+    events = sl.get_events_by_venue(venues = ['Casbah'], city = 'San Diego')
     artists = [e.name for e in events]
     artists = ['Minus The Bear']
     # for artist in artists:
