@@ -12,5 +12,9 @@ dynamic = ["version"]
 dependencies = [
     "spotipy",
     "geopy",
-    "ticketpy"
+    "ticketpy",
+    "Click"
     ]
+
+[project.scripts]
+spots = "cli.cli:update_from_json"
