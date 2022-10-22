@@ -16,7 +16,7 @@ def update(spotcli, playlist_name, venue, city, tm_path, spotify_path):
         spotcli = SpotCli(tm_path, spotify_path)
     try:
         all_events = spotcli.spotlive.get_events_by_venue(
-            venues = venue,
+            venues = list(venue),
             city = city
             )
     except AttributeError:
@@ -27,7 +27,12 @@ def update(spotcli, playlist_name, venue, city, tm_path, spotify_path):
         artists.extend(
             [e.name for e in events]
         )
-    spotcli.spotlive.spot.add_to_playlist(
-        playlist_id = playlist_name,
+    # append. creating if necessary
+    spotcli.spotlive.append_playlist(
+        playlist_name = playlist_name,
         artists = artists
         )
+    # spotcli.spotlive.spot.add_to_playlist(
+    #     playlist_id = playlist_name,
+    #     artists = artists
+    #     )
