@@ -1,7 +1,6 @@
 # SpotLive
 Create Spotify playlists based on upcoming shows at your chosen venues
 
-
 ## Requirements
 Uses Python 3.8+ and these modules (see `requirements.txt` for updates).
 ```python
@@ -29,18 +28,38 @@ For info on creating Spotify credentials: go [here](https://developer.spotify.co
 
 
 ## Usage
+### CLI
+This package includes a CLI program for creating/updating playlists from configs or via command line arguments that specify venues or areas of interest.
+
+Update playlist(s) from a json config
+```bash
+spotlive update --tm_path TICKETMASTER_CREDS_APTH --spotify_path SPOTIFY_CREDS_PATH CONFIG_PATH
+```
+### Configs
+
+```json
+{
+    "playlist_name": "Casbah_1",
+    "venues": ["Casbah"],
+    "city": ["San Diego"],
+    "venue_exclude": [],
+    "artist_exclude": [],
+    "days_ahead": null
+}
+```
+### Python Modules
+You can of course invoke the python modules directly. To update from a config json, for example:
 
 ```python
-def run_from_config():
-    with open('secrets/ticketmaster_app_creds.json') as f:
-        ticketmaster_app_creds = json.loads(f.read())
-    with open('secrets/spotify_app_creds.json') as f:
-        spotify_app_creds = json.loads(f.read())
-    sl = SpotLive(spotify_app_creds=spotify_app_creds, ticketmaster_app_creds=ticketmaster_app_creds)
-    sl.update_from_config(config = 'test/test_config.json')
+with open('secrets/ticketmaster_app_creds.json') as f:
+    ticketmaster_app_creds = json.loads(f.read())
+with open('secrets/spotify_app_creds.json') as f:
+    spotify_app_creds = json.loads(f.read())
+sl = SpotLive(spotify_app_creds=spotify_app_creds, ticketmaster_app_creds=ticketmaster_app_creds)
+sl.update_from_config(config = 'test/test_config.json')
 ```
 
-### Modules
+You can use `SpotLive` to link together `Spotify` and `Shows` and perform artists and venue lookups, etc., to decide how to build playlists. See below for some example usage.
 
 **SpotLive**
 ```python
@@ -109,21 +128,4 @@ for classification_name in classification_names:
         zipcode='92101'
         )
     [x.local_start_date for x in events]
-```
-
-
-### CLI
-This package includes a CLI program for creating/updating playlists from configs or via command line arguments that specify venues or areas of interest.
-
-### Configs
-
-```json
-{
-    "playlist_name": "Casbah_1",
-    "venues": ["Casbah"],
-    "city": ["San Diego"],
-    "venue_exclude": [],
-    "artist_exclude": [],
-    "days_ahead": null
-}
 ```
