@@ -1,23 +1,7 @@
 import click
 from spotlive import SpotLive
-import json
-import os
-
-class SpotCli(object):
-    def __init__(self, tm_path, spotify_path):
-        self.ticketmaster_app_creds = self.get_creds(tm_path)
-        self.spotify_app_creds = self.get_creds(spotify_path)
-        self.spotlive = SpotLive(
-            spotify_app_creds = self.spotify_app_creds,
-            ticketmaster_app_creds = self.ticketmaster_app_creds
-            )
-    def get_creds(self, json_path):
-        with open(json_path) as f:
-            creds = json.loads(f.read())
-        return creds
-
-pass_spotcli = click.make_pass_decorator(SpotCli)
-
+from .spot_cli import SpotCli, pass_spotcli
+from .update.update import update
 
 # Core CLI group
 @click.group()
@@ -27,14 +11,8 @@ pass_spotcli = click.make_pass_decorator(SpotCli)
 def spotlive(ctx, tm_path, spotify_path):
     ctx.obj = SpotCli(tm_path, spotify_path)
 
+spotlive.add_command(update)
 
-@spotlive.command()
-@click.argument('config_path')
-@pass_spotcli
-def update(spotcli, config_path):
-    print('hello world')
-    spotcli.spotlive.update_from_config(config = config_path)
-    pass
 
 # # @update.command()
 # def update_from_json(tm_path, spotify_path, config_path):
