@@ -4,7 +4,10 @@
         "venues": ["Casbah"],
         "venue_exclude": [],
         "artist_exclude": [],
-        "days_ahead": 40
+        "days_ahead": 60,
+        "clear_playlist": true,
+        "tracks_per_artist": 5,
+        "shuffle": false
     },
     {
         "playlist_name": "SanDiego_Upcoming",

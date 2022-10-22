@@ -78,9 +78,9 @@ for venue, events in all_events.items():
 sl.append_playlist(playlist_name='tester_list2', artists = artists)
 ```
 
-
 **Spotify**
 ```python
+from spotlive.spotify import Spot
 spot = Spot(spotify_app_creds, user_id = spotify_app_creds['user_id'])
 # get existing playlist
 playlist_name = 'my_example'
@@ -93,13 +93,14 @@ playlist = spot.create_playlist(
 # add artist to playlist
 spot.add_to_playlist(
     playlist_id = playlist['id']
-    artists = ['Talking Heads']
+    artists = ['Talking Heads'],
+    tracks_per_artist = 10,
+    clear_playlist = True,
+    shuffle = True
 )
 # lookup artist tracks
-artists = ['Minus The Bear']
-for artist in artists:
-    arts = spot.lookup_artist(artist, return_type='artist,track')
-    tracks = [x['uri'] for x in arts['tracks']['items']]
+artist = 'Minus The Bear'
+arts = spot.lookup_artist(artist, return_type='artist,track')
 ```
 
 **Ticketmaster**

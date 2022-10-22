@@ -61,7 +61,7 @@ class SpotLive:
                 module_logger.info(f"failed with: {venue.name}")
                 all_events[venue] = []
         return all_events
-    def append_playlist(self, playlist_name: str, artists: list):
+    def append_playlist(self, playlist_name: str, artists: list, tracks_per_artist: int, clear_playlist: bool = False, shuffle: bool = False):
         playlist = [x for x in self.playlists if x.get('name','') == playlist_name]
         if len(playlist) == 0:
             module_logger.info(f'creating playlist {playlist}')
@@ -75,7 +75,10 @@ class SpotLive:
         module_logger.info(f"Proceeding with playlist_id: {playlist['id']}")
         self.spot.add_to_playlist(
             playlist_id = playlist['id'],
-            artists = artists
+            artists = artists,
+            tracks_per_artist = tracks_per_artist,
+            clear_playlist = clear_playlist,
+            shuffle = shuffle
             )
     def update_from_config(self, config: dict = None):
         '''
@@ -86,7 +89,10 @@ class SpotLive:
             "city": ["San Diego"],
             "venue_exclude": [],
             "artist_exclude": [],
-            "days_ahead": null
+            "days_ahead": null,
+            "clear_playlist": False,
+            "tracks_per_artist": 5,
+            "shuffle": False
         }
         '''
         if isinstance(config, str):
@@ -121,7 +127,10 @@ class SpotLive:
             module_logger.debug(f"Updating playlist using artists: {artists}")
             self.append_playlist(
                 playlist_name = playlist_name,
-                artists = artists
+                artists = artists,
+                clear_playlist=config.get('clear_playlist', False),
+                shuffle = config.get('shuffle', False),
+                tracks_per_artist=config.get('tracks_per_artist', 5)
                 )
             module_logger.info(f"Ok. Updated {playlist_name}")
 
