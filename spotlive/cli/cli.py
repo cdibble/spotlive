@@ -1,6 +1,7 @@
 import click
 from .spot_cli import SpotCli, pass_spotcli
 from .from_config.from_config import from_config
+from .update.update import update
 
 # Core CLI group
 @click.group()
@@ -9,6 +10,8 @@ from .from_config.from_config import from_config
 @click.pass_context
 def spotlive(ctx, tm_path, spotify_path):
     ctx.obj = SpotCli(tm_path, spotify_path)
+
+spotlive.add_command(update)
 
 spotlive.add_command(from_config)
 
