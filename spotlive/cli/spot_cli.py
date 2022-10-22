@@ -1,7 +1,6 @@
 import click
 from spotlive import SpotLive
 import json
-import os
 
 class SpotCli(object):
     def __init__(self, tm_path, spotify_path):
