@@ -17,4 +17,4 @@ dependencies = [
     ]
 
 [project.scripts]
-spots = "cli.cli:update_from_json"
+spotlive = "cli.cli:spotlive"
