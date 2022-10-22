@@ -82,17 +82,25 @@ class SpotLive:
             )
     def update_from_config(self, config: dict = None):
         '''
+        Params
+        ------
+        config: dict
+            'include_city_venues': bool
+                Whether to lookup venues in `cities`; if False, just use `cities` to narrow search for given `venues`.
+
         Example Config:
         {
             "playlist_name": "Casbah_1",
             "venues": ["Casbah"],
-            "city": ["San Diego"],
+            "cities": ["San Diego"],
+            "include_city_venues": false,
             "venue_exclude": [],
             "artist_exclude": [],
+            "genre": null,
             "days_ahead": null,
-            "clear_playlist": False,
+            "clear_playlist": false,
             "tracks_per_artist": 5,
-            "shuffle": False
+            "shuffle": false
         }
         '''
         if isinstance(config, str):
@@ -105,22 +113,32 @@ class SpotLive:
             if not playlist_name:
                 raise ValueError("playlist_config must include key 'playlist_name' for the playlist to create or append")
             all_venues = playlist_config.get('venues', [])
-            if playlist_config.get('city'):
-                city_venues = []
-                for city in playlist_config.get('city'):
-                    city_venues.extend(
-                        self.shows.venue_search(
-                            city = city
-                            )
-                    )
-                all_venues.extend(city_venues)
+            if playlist_config.get('cities'):
+                if playlist_config.get('include_city_venues', False):
+                    city_venues = []
+                    for city in playlist_config.get('cities'):
+                        city_venues.extend(
+                            self.shows.venue_search(
+                                city = city
+                                )
+                        )
+                    all_venues.extend(city_venues)
             venues = [x for x in all_venues if x not in playlist_config.get('venue_exclude', [])]
             module_logger.info(f"Updating playlist using venues: {venues}")
             if playlist_config.get('days_ahead'):
                 self.end_date = (parser.parse(self.start_date) + timedelta(days=int(playlist_config.get('days_ahead')))).isoformat()
-            all_events = self.get_events_by_venue(venues = venues)
+            all_events = {}
+            for city in playlist_config.get('cities', [None]):
+                all_events = {**all_events,
+                    **self.get_events_by_venue(
+                        venues = venues,
+                        city = city,
+                        classification = playlist_config.get('genre')
+                    )
+                }
             artists = []
             for venue, events in all_events.items():
+                print(venue.name)
                 artists.extend(
                     [e.name for e in events if e.name not in playlist_config.get('artist_exclude', [])]
                 )
@@ -128,15 +146,16 @@ class SpotLive:
             self.append_playlist(
                 playlist_name = playlist_name,
                 artists = artists,
-                clear_playlist=config.get('clear_playlist', False),
-                shuffle = config.get('shuffle', False),
-                tracks_per_artist=config.get('tracks_per_artist', 5)
+                clear_playlist=playlist_config.get('clear_playlist', False),
+                shuffle = playlist_config.get('shuffle', False),
+                tracks_per_artist=playlist_config.get('tracks_per_artist', 5)
                 )
             module_logger.info(f"Ok. Updated {playlist_name}")
 
 
 
 def main():
+    from SpotLive.spotlive import SpotLive
     with open('secrets/ticketmaster_app_creds.json') as f:
         ticketmaster_app_creds = json.loads(f.read())
     with open('secrets/spotify_app_creds.json') as f:

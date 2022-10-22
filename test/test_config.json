@@ -2,6 +2,8 @@
     {
         "playlist_name": "Casbah_Upcoming",
         "venues": ["Casbah"],
+        "cities": ["San Diego"],
+        "include_city_venues": false,
         "venue_exclude": [],
         "artist_exclude": [],
         "days_ahead": 60,
@@ -12,10 +14,9 @@
     {
         "playlist_name": "SanDiego_Upcoming",
         "venues": [],
-        "city": ["San Diego"],
+        "cities": ["San Diego"],
         "venue_exclude": ["Casbah"],
         "artist_exclude": [],
         "days_ahead": 10
     }
-    
 ]

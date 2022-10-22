@@ -63,6 +63,7 @@ You can use `SpotLive` to link together `Spotify` and `Shows` and perform artist
 
 **SpotLive**
 ```python
+from SpotLive.spotlive import SpotLive
 sl = SpotLive(spotify_app_creds=spotify_app_creds, ticketmaster_app_creds=ticketmaster_app_creds)
 # update a playlist from a config json
 sl.update_from_config(config = 'test/test_config.json')
@@ -80,7 +81,7 @@ sl.append_playlist(playlist_name='tester_list2', artists = artists)
 
 **Spotify**
 ```python
-from spotlive.spotify import Spot
+from SpotLive.spotify import Spot
 spot = Spot(spotify_app_creds, user_id = spotify_app_creds['user_id'])
 # get existing playlist
 playlist_name = 'my_example'
