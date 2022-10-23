@@ -11,7 +11,7 @@ class Shows:
     def _city_lookup(self, city: str):
         geolocator = Nominatim(user_agent="your_app_name")
         return geolocator.geocode(city)
-    def venue_search(self, city: str = None, latlong: str = None, radius_mi: int = None, keyword: str = None, limit = 50, **kwargs):
+    def venue_search(self, city: str = None, latlong: str = None, radius_mi: int = 10, keyword: str = None, limit = 50, **kwargs):
         # https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-venues-v2
         if city:
             city = self._city_lookup(city = city)

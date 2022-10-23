@@ -27,7 +27,7 @@ class SpotLive:
         venues: list = None,
         city: str = None,
         latlong: str = None,
-        radius_mi: int = None,
+        radius_mi: int = 10,
         classification: str = None
         ):
         if not venues:
@@ -39,8 +39,7 @@ class SpotLive:
                     keyword = venues[i],
                     city=city,
                     radius_mi=radius_mi,
-                    latlong=latlong,
-                    classification=classification
+                    latlong=latlong
                     )
                 # venue_i = list(set(venue_i))
                 print([x.name for x in venue_i])
@@ -58,6 +57,7 @@ class SpotLive:
                     start_date_time=self.start_date,
                     end_date_time=self.end_date,
                     venue_id=venue.id,
+                    classification=classification
                 )
             except:
                 module_logger.info(f"failed with: {venue.name}")
