@@ -33,7 +33,10 @@ This package includes a CLI program for creating/updating playlists from configs
 
 Update playlist(s) from a json config
 ```bash
-spotlive update --tm_path TICKETMASTER_CREDS_APTH --spotify_path SPOTIFY_CREDS_PATH CONFIG_PATH
+TICKETMASTER_CREDS_PATH=secrets/ticketmaster_app_creds.json
+SPOTIFY_CREDS_PATH=secrets/spotify_app_creds.json
+CONFIG_PATH=test/test_config.json
+spotlive update --tm_path $TICKETMASTER_CREDS_PATH --spotify_path $SPOTIFY_CREDS_PATH $CONFIG_PATH
 ```
 ### Configs
 
@@ -63,6 +66,7 @@ You can use `SpotLive` to link together `Spotify` and `Shows` and perform artist
 
 **SpotLive**
 ```python
+from SpotLive.spotlive import SpotLive
 sl = SpotLive(spotify_app_creds=spotify_app_creds, ticketmaster_app_creds=ticketmaster_app_creds)
 # update a playlist from a config json
 sl.update_from_config(config = 'test/test_config.json')
@@ -78,9 +82,9 @@ for venue, events in all_events.items():
 sl.append_playlist(playlist_name='tester_list2', artists = artists)
 ```
 
-
 **Spotify**
 ```python
+from SpotLive.spotify import Spot
 spot = Spot(spotify_app_creds, user_id = spotify_app_creds['user_id'])
 # get existing playlist
 playlist_name = 'my_example'
@@ -93,17 +97,19 @@ playlist = spot.create_playlist(
 # add artist to playlist
 spot.add_to_playlist(
     playlist_id = playlist['id']
-    artists = ['Talking Heads']
+    artists = ['Talking Heads'],
+    tracks_per_artist = 10,
+    clear_playlist = True,
+    shuffle = True
 )
 # lookup artist tracks
-artists = ['Minus The Bear']
-for artist in artists:
-    arts = spot.lookup_artist(artist, return_type='artist,track')
-    tracks = [x['uri'] for x in arts['tracks']['items']]
+artist = 'Minus The Bear'
+arts = spot.lookup_artist(artist, return_type='artist,track')
 ```
 
 **Ticketmaster**
 ```python
+from SpotLive.ticketmaster import Shows
 shows = Shows(ticketmaster_app_creds)
 city_info = shows._city_lookup(city='San Diego')
 # Look up Venues

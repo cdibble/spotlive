@@ -1,7 +1,9 @@
+from turtle import clear
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import json
 import traceback
+import random
 import logging 
 module_logger = logging.getLogger(__name__)
 
@@ -23,6 +25,7 @@ class Spot:
                 scope="user-library-read,playlist-modify-private,playlist-modify-public")
             )
         self.user_id = user_id if user_id else spotify_app_creds.get('user_id', 'spotify')
+        # self.set_user_playlists()
     def get_playlists(self, user: str = None):
         if not user:
             user = self.user_id
@@ -52,12 +55,31 @@ class Spot:
             collaborative= collaborative,
             description = description
         )
-    def add_to_playlist(self, playlist_id: str = None, artists: list = []):
+    def add_to_playlist(self, playlist_id: str = None, artists: list = [], tracks_per_artist:int = 5, clear_playlist:bool = False, shuffle:bool = False):
+        '''
+        Params
+        -------
+        shuffle: bool
+            If True, randomly select tracks, else (default) use top N tracks for the artist.
+        '''
+        if clear_playlist:
+            self.spot.playlist_replace_items(
+                playlist_id = playlist_id,
+                items = []
+            )
+        existing_tracks = self.spot.playlist_items(playlist_id=playlist_id)['items']
+        exclude_tracks = [x['track']['id'] for x in existing_tracks]
         added_tracks = {}
         for artist in artists:
             module_logger.debug(f'going for artist {artist}')
-            arts = self.lookup_artist(name = artist, return_type = 'track')
-            tracks = [x['uri'] for x in arts['tracks']['items']]
+            # Return 4x tracks to ensure we have a variety for shuffle and in case of extensive exclude_tracks
+            arts = self.lookup_artist(name = artist, return_type = 'track', limit = tracks_per_artist*4)
+            tracks = [x['uri'] for x in arts['tracks']['items'] if x['id'] not in exclude_tracks]
+            if shuffle:
+                tracks = random.sample(tracks, k = tracks_per_artist)
+                # print(tracks)
+            else:
+                tracks = tracks[0:tracks_per_artist]
             module_logger.info(f"artist: {artist}")
             module_logger.info(f"tracks: {tracks}")
             if len(tracks) > 0:
@@ -89,3 +111,5 @@ def main():
     with open('secrets/spotify_app_creds.json') as f:
         spotify_app_creds = json.loads(f.read())
     spot = Spot(spotify_app_creds, user_id = spotify_app_creds['user_id'])
+    spot.set_user_playlists()
+    spot.add_to_playlist(spot.playlists[0]['id'], artists = ['Minus The Bear'], tracks_per_artist = 10, clear_playlist=True, shuffle=True)

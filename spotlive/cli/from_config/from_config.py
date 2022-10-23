@@ -12,6 +12,8 @@ def from_config(spotcli, config_path, tm_path, spotify_path):
     if (tm_path is not None) & (spotify_path is not None):
         spotcli = SpotCli(tm_path, spotify_path)
     try:
-        spotcli.spotlive.update_from_config(config = config_path)
+        spotcli.spotlive.update_from_config(
+            config = config_path
+            )
     except AttributeError:
         module_logger.error(f"Could not initiate SpotLive. Did you pass Spotify and Tickematser configs? See `spotlive update --help`.")
