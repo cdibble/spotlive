@@ -28,6 +28,7 @@ Built on Python 3.10 and these modules (see `pyproject.toml` for updates).
 spotipy
 ticketpy
 geopy
+Click
 ```
 ## Usage
 ### CLI
