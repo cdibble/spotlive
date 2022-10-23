@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 from dateutil import parser
 import logging
 module_logger = logging.getLogger(__name__)
+import importlib.metadata
+__version__ = importlib.metadata.version("SpotLive")
 
 class SpotLive:
     def __init__(

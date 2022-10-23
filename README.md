@@ -1,12 +1,10 @@
 # SpotLive
 Create Spotify playlists based on upcoming shows at your chosen venues
 
-## Requirements
-Uses Python 3.8+ and these modules (see `requirements.txt` for updates).
-```python
-spotipy
-ticketpy
-geopy
+## Installation
+
+```
+pip install git+https://github.com/cdibble/spotlive
 ```
 
 ## Credentials
@@ -18,15 +16,19 @@ Ticketmaster looks like:
 ```
 For info on creating Ticketmaster credentials: go [here](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2)
 
-
-
 Spotify looks like:
 ```json
 {"app_name": "Whatever", "client_id": "***", "client_secret": "***", "redirect_uri": "https://localhost", "user_id": "***"}
 ```
 For info on creating Spotify credentials: go [here](https://developer.spotify.com/documentation/general/guides/authorization/code-flow/)
 
-
+## Requirements
+Built on Python 3.10 and these modules (see `pyproject.toml` for updates).
+```python
+spotipy
+ticketpy
+geopy
+```
 ## Usage
 ### CLI
 This package includes a CLI program for creating/updating playlists from configs or via command line arguments that specify venues or areas of interest.
