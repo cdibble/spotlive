@@ -77,7 +77,7 @@ class Spot:
             tracks = [x['uri'] for x in arts['tracks']['items'] if x['id'] not in exclude_tracks]
             if shuffle:
                 tracks = random.sample(tracks, k = tracks_per_artist)
-                print(tracks)
+                # print(tracks)
             else:
                 tracks = tracks[0:tracks_per_artist]
             module_logger.info(f"artist: {artist}")

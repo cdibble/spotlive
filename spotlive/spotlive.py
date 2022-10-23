@@ -42,8 +42,10 @@ class SpotLive:
                     latlong=latlong,
                     classification=classification
                     )
+                # venue_i = list(set(venue_i))
+                print([x.name for x in venue_i])
                 if len(venue_i) > 1:
-                    module_logger.warning(f"Venue lookup returned more than one possible result. Pass city or latlong/radius_mi to narrow down the results.")
+                    module_logger.warning(f"Venue lookup returned more than one possible result. Pass city or latlong/radius_mi to narrow down the results. {venue_i}")
                     venues[i] = venue_i[0]
                     venues.extend(venue_i[1:])
                 else:
@@ -110,6 +112,7 @@ class SpotLive:
         module_logger.info(f"Updating playlist using config: {config}")
         for playlist_config in config:
             playlist_name = playlist_config.get('playlist_name')
+            module_logger.warning(f"Updating playlist: {playlist_name}")
             if not playlist_name:
                 raise ValueError("playlist_config must include key 'playlist_name' for the playlist to create or append")
             all_venues = playlist_config.get('venues', [])
@@ -129,16 +132,17 @@ class SpotLive:
                 self.end_date = (parser.parse(self.start_date) + timedelta(days=int(playlist_config.get('days_ahead')))).isoformat()
             all_events = {}
             for city in playlist_config.get('cities', [None]):
+                module_logger.warning(f"Getting events for {venues} in {city}")
                 all_events = {**all_events,
                     **self.get_events_by_venue(
                         venues = venues,
                         city = city,
-                        classification = playlist_config.get('genre')
+                        # classification = playlist_config.get('genre')
                     )
                 }
             artists = []
             for venue, events in all_events.items():
-                print(venue.name)
+                # print(venue.name)
                 artists.extend(
                     [e.name for e in events if e.name not in playlist_config.get('artist_exclude', [])]
                 )
@@ -146,9 +150,9 @@ class SpotLive:
             self.append_playlist(
                 playlist_name = playlist_name,
                 artists = artists,
-                clear_playlist=playlist_config.get('clear_playlist', False),
+                clear_playlist = playlist_config.get('clear_playlist', False),
                 shuffle = playlist_config.get('shuffle', False),
-                tracks_per_artist=playlist_config.get('tracks_per_artist', 5)
+                tracks_per_artist = playlist_config.get('tracks_per_artist', 5)
                 )
             module_logger.info(f"Ok. Updated {playlist_name}")
 

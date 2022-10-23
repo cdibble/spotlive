@@ -17,6 +17,9 @@
         "cities": ["San Diego"],
         "venue_exclude": ["Casbah"],
         "artist_exclude": [],
-        "days_ahead": 10
+        "days_ahead": 10,
+        "clear_playlist": true,
+        "tracks_per_artist": 2,
+        "shuffle": false
     }
 ]

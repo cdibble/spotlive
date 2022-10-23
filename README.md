@@ -33,7 +33,10 @@ This package includes a CLI program for creating/updating playlists from configs
 
 Update playlist(s) from a json config
 ```bash
-spotlive update --tm_path TICKETMASTER_CREDS_APTH --spotify_path SPOTIFY_CREDS_PATH CONFIG_PATH
+TICKETMASTER_CREDS_PATH=secrets/ticketmaster_app_creds.json
+SPOTIFY_CREDS_PATH=secrets/spotify_app_creds.json
+CONFIG_PATH=test/test_config.json
+spotlive update --tm_path $TICKETMASTER_CREDS_PATH --spotify_path $SPOTIFY_CREDS_PATH $CONFIG_PATH
 ```
 ### Configs
 
@@ -106,6 +109,7 @@ arts = spot.lookup_artist(artist, return_type='artist,track')
 
 **Ticketmaster**
 ```python
+from SpotLive.ticketmaster import Shows
 shows = Shows(ticketmaster_app_creds)
 city_info = shows._city_lookup(city='San Diego')
 # Look up Venues
