@@ -38,6 +38,12 @@ SPOTIFY_CREDS_PATH=secrets/spotify_app_creds.json
 CONFIG_PATH=test/test_config.json
 spotlive update --tm_path $TICKETMASTER_CREDS_PATH --spotify_path $SPOTIFY_CREDS_PATH $CONFIG_PATH
 ```
+
+Create or update playlist from CLI args.
+```bash
+spotlive update  -v 'Belly Up Tavern' --city 'Solana Beach' -t 3 -c --tm_path secrets/ticketmaster_app_creds.json --spotify_path secrets/spotify_app_creds.json 'BELLYUP'
+```
+
 ### Configs
 
 ```json
