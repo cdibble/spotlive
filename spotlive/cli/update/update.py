@@ -31,7 +31,7 @@ def update(
     ):
     if (tm_path is not None) & (spotify_path is not None):
         spotcli = SpotCli(tm_path, spotify_path, start_date, days_forward)
-        print(f"Got instance of SpotCli for: {spotcli.spotlive.start_date}")
+        module_logger.debug(f"Got instance of SpotCli for: {spotcli.spotlive.start_date}")
     try:
         all_events = spotcli.spotlive.get_events_by_venue(
             venues = list(venue),

@@ -1,6 +1,7 @@
 import click
 from spotlive import SpotLive
 import json
+import logging
 
 class SpotCli(object):
     def __init__(self, tm_path, spotify_path, start_date: str = None, days_forward: int = 30):
@@ -13,8 +14,8 @@ class SpotCli(object):
         except TypeError:
             self.spotify_app_creds = {}
         try:
-            print(f"here start_date: {start_date}")
-            print(f"days_forward: {days_forward}")
+            logging.getLogger('SpotCli').debug(f"start_date: {start_date}")
+            logging.getLogger('SpotCli').debug(f"days_forward: {days_forward}")
             self.spotlive = SpotLive(
                 spotify_app_creds = self.spotify_app_creds,
                 ticketmaster_app_creds = self.ticketmaster_app_creds,
