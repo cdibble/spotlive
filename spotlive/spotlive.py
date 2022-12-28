@@ -44,7 +44,7 @@ class SpotLive:
                     latlong=latlong
                     )
                 # venue_i = list(set(venue_i))
-                print([x.name for x in venue_i])
+                module_logger.info(f"Matched venues: {[x.name for x in venue_i]}")
                 if len(venue_i) > 1:
                     module_logger.warning(f"Venue lookup returned more than one possible result. Pass city or latlong/radius_mi to narrow down the results. {venue_i}")
                     venues[i] = venue_i[0]
